@@ -1,0 +1,17 @@
+[project]
+name = "jakana"
+version = "0.1.0"
+description = "Learn Japanese kana"
+readme = "README.md"
+authors = [
+    { name = "sccuhha" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+jakana = "jakana.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
