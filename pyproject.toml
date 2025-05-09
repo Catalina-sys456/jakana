@@ -1,5 +1,5 @@
 [project]
-name = "jakana-cli"
+name = "jakana"
 version = "0.1.0"
 description = "Learn Japanese kana"
 readme = "README.md"
