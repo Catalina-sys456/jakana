@@ -72,9 +72,10 @@ def train_romaji():
 
 def main():
     if len(sys.argv) > 1:
-        to_search = sys.argv[1]
-        print(f"Searching for: {to_search}")
-        Japanese_search(to_search)
+        for word in sys.argv:
+            to_search = word
+            print(f"Searching for: {to_search}")
+            Japanese_search(to_search)
     else:
         while True:
             print("\nChoose a mode:")
