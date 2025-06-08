@@ -23,9 +23,9 @@ To start a test
 	Choose a mode:
 	1: Train Romaji (from Hiragana/Katakana)
 	2: Train Hiragana (from Katakana)
-	3: Train custom exercises from (from .config/jakana/exercises)
-	4: Train thr question you're done wrong (from .config/jakana/mistakes)
+	3: Train custom exercises from (from ~/.config/jakana/exercises)
+	4: Train thr question you're done wrong (from ~/.config/jakana/mistakes)
 	5: Exit	
 	
 	
-You can edit file in .config/jakana/exercises to creat custom exercises,and jakana will automatically record wrong questions in folder .config/jakana/mistakes
+You can edit file in ~/.config/jakana/exercises to creat custom exercises,and jakana will automatically record wrong questions in folder ~/.config/jakana/mistakes

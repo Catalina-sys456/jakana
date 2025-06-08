@@ -104,7 +104,7 @@ def train_from_folder(folder_path, record):
                 all_exercises = yaml.safe_load_all(exercise_file)
                 for exercise in all_exercises:
                     total_question += 1
-                    topic = exercise['topic']
+                    topic = exercise['question']
                     solution = exercise['solution']
                     print(topic)
                     get_answer = input('Your answer:')
@@ -145,8 +145,8 @@ def main():
             print("\nChoose a mode:")
             print("1: Train Romaji (from Hiragana/Katakana)")
             print("2: Train Hiragana (from Katakana)")
-            print("3: Train custom exercises from (from .config/jakana/exercises)")
-            print("4: Train thr question you're done wrong (from .config/jakana/mistakes)")
+            print("3: Train custom exercises from (from ~/.config/jakana/exercises)")
+            print("4: Train thr question you're done wrong (from ~/.config/jakana/mistakes)")
             print("5: Exit")
             choice = input("Enter your choice (number): ")
 
