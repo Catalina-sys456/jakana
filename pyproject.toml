@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "datetime>=5.5",
     "pyyaml>=6.0.2",
 ]
 

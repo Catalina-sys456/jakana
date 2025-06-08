@@ -4,7 +4,7 @@ Help you to learn Japanse kana
 
 ## usage
 
-to search a word:
+To search a word:
 
     jakana a
    
@@ -16,12 +16,16 @@ to search a word:
     Searching for: あ
 	Hiragana 'あ' corresponds to: Katakana 'ア', Romaji 'a'
    
-to start a test
+To start a test
 
     jakana
 
 	Choose a mode:
 	1: Train Romaji (from Hiragana/Katakana)
 	2: Train Hiragana (from Katakana)
-	3: Exit
-	Enter your choice (1, 2, or 3): 
+	3: Train custom exercises from (from .config/jakana/exercises)
+	4: Train thr question you're done wrong (from .config/jakana/mistakes)
+	5: Exit	
+	
+	
+You can edit file in .config/jakana/exercises to creat custom exercises,and jakana will automatically record wrong questions in folder .config/jakana/mistakes
