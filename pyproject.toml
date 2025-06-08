@@ -7,7 +7,9 @@ authors = [
     { name = "sccuhha" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0.2",
+]
 
 [project.scripts]
 jakana = "jakana.main:main"
