@@ -75,7 +75,7 @@ def train_romaji():
 
         print("")
 
-def write_wrong_exercises(wrong_exercises, wrong_exercises_folder_path):
+def record_wrong_exercises(wrong_exercises, wrong_exercises_folder_path):
     file_name = f'{datetime.date.today()}.yml'
     file_path = os.path.join(wrong_exercises_folder_path, file_name)
     if wrong_exercises != None:
@@ -87,45 +87,52 @@ def train_from_folder(folder_path, record):
         #choose file
         all_file_names = os.listdir(folder_path)
         counter = 0
+        print('')
         print('Choose a file')
         for file_name in all_file_names:
             counter += 1
             print(f'{counter}: {file_name}')
         choice = input('Enter our choice (number): ')
         file_number = int(choice)
+        
         #questions
         if isinstance(file_number, int) and file_number > 0 and file_number <= counter:
             file_number = file_number -1
             chosed_file = all_file_names[file_number]
             file_path = os.path.join(folder_path, chosed_file)
+            #counting for the purpose of computing accuracy
             total_question = 0
             correct_answer = 0
             with open(file_path) as exercise_file:
                 all_exercises = yaml.safe_load_all(exercise_file)
                 for exercise in all_exercises:
-                    total_question += 1
-                    topic = exercise['question']
+                    question = exercise['question']
                     solution = exercise['solution']
-                    print(topic)
-                    get_answer = input('Your answer:')
-                    if get_answer == solution:
-                        correct_answer += 1
-                        print('Correct! 😁')
-                    elif record == True:
-                        #record mistakes
-                        wrong_exercises_path = os.path.join(os.path.expanduser('~'), '.config/jakana/mistakes')
-                        write_wrong_exercises(exercise, wrong_exercises_path)
-                        
-                        print('Incorrect 😭 The corret answer is :')
-                        print(solution)
-                    else:
-                        print('Incorrect 😭 The corret answer is :')
-                        print(solution)
+                    if question != None and solution != None:
+                        total_question += 1
+                        print(question)
+                        get_answer = input('Your answer: ') 
+                        if get_answer == solution:
+                            correct_answer += 1
+                            print('Correct! 😁')
+                            print('')
+                        elif record == True:
+                            #record mistakes
+                            wrong_exercises_path = os.path.join(os.path.expanduser('~'), '.jakana/mistakes')
+                            record_wrong_exercises(exercise, wrong_exercises_path)
+                            
+                            print('Incorrect 😭 The corret answer is:')
+                            print(solution)
+                            print('')
+                        else:
+                            print('Incorrect 😭 The corret answer is:')
+                            print(solution)
+                            print('')
 
-                #percentage and print 
-                percentage = lambda x , y: f'{x / y * 100}%'
-                accuracy = percentage(correct_answer, total_question)
-                print(f'Total {total_question} questions, correct answer is {correct_answer}, accuracy{accuracy} ')
+            #percentage and print 
+            percentage = lambda x , y: f'{x / y * 100}%'
+            accuracy = percentage(correct_answer, total_question)
+            print(f'Total {total_question} questions, Answered {correct_answer} questions correctly, accuracy: {accuracy} ')
         else:
             print('\nPlease enter correct number!\n')
             train_from_folder(folder_path, record)
@@ -145,8 +152,8 @@ def main():
             print("\nChoose a mode:")
             print("1: Train Romaji (from Hiragana/Katakana)")
             print("2: Train Hiragana (from Katakana)")
-            print("3: Train custom exercises from (from ~/.config/jakana/exercises)")
-            print("4: Train thr question you're done wrong (from ~/.config/jakana/mistakes)")
+            print("3: Train custom exercises from (from ~/.jakana/exercises)")
+            print("4: Train thr question you're done wrong (from ~/.jakana/mistakes)")
             print("5: Exit")
             choice = input("Enter your choice (number): ")
 
@@ -157,12 +164,12 @@ def main():
                 train_kana()
                 break
             elif choice == '3':
-                folder_path =  os.path.join(os.path.expanduser('~'), '.config/jakana/exercises')
+                folder_path =  os.path.join(os.path.expanduser('~'), '.jakana/exercises')
                 record = True
                 train_from_folder(folder_path, record)
                 break
             elif choice == '4':
-                folder_path =  os.path.join(os.path.expanduser('~'), '.config/jakana/mistakes')
+                folder_path =  os.path.join(os.path.expanduser('~'), '.jakana/mistakes')
                 record = False
                 train_from_folder(folder_path, record)
                 break
