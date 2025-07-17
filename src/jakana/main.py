@@ -3,6 +3,7 @@ import random
 import yaml
 import os
 import datetime
+import requests
 
 Japanese = [("あ", "ア", "a"), ("い", "イ", "i"), ("う", "ウ", "u"), ("え", "エ", "e"), ("お", "オ", "o"), ("か", "カ", "ka"), ("き", "キ", "ki"), ("く", "ク", "ku"), ("け", "ケ", "ke"), ("こ", "コ", "ko"), ("さ", "サ", "sa"), ("し", "シ", "shi"), ("す", "ス", "su"), ("せ", "セ", "se"), ("そ", "ソ", "so"), ("た", "タ", "ta"), ("ち", "チ", "chi"), ("つ", "ツ", "tsu"), ("て", "テ", "te"), ("と", "ト", "to"), ("な", "ナ", "na"), ("に", "ニ", "ni"), ("ぬ", "ヌ", "nu"), ("ね", "ネ", "ne"), ("の", "ノ", "no"), ("は", "ハ", "ha"), ("ひ", "ヒ", "hi"), ("ふ", "フ", "fu"), ("へ", "ヘ", "he"), ("ほ", "ホ", "ho"), ("ま", "マ", "ma"), ("み", "ミ", "mi"), ("む", "ム", "mu"), ("め", "メ", "me"), ("も", "モ", "mo"), ("や", "ヤ", "ya"), ("ゆ", "ユ", "yu"), ("よ", "ヨ", "yo"), ("ら", "ラ", "ra"), ("り", "リ", "ri"), ("る", "ル", "ru"), ("れ", "レ", "re"), ("ろ", "ロ", "ro"), ("わ", "ワ", "wa"), ("を", "ヲ", "o"), ("ん", "ン", "n"), ("が", "ガ", "ga"), ("ぎ", "ギ", "gi"), ("ぐ", "グ", "gu"), ("げ", "ゲ", "ge"), ("ご", "ゴ", "go"), ("ざ", "ザ", "za"), ("じ", "ジ", "ji"), ("ず", "ズ", "zu"), ("ぜ", "ゼ", "ze"), ("ぞ", "ゾ", "zo"), ("だ", "ダ", "da"), ("ぢ", "ヂ", "ji"), ("づ", "ヅ","zu"), ("で", "デ", "de"), ("ど", "ド", "do"), ("ば", "バ", "ba"), ("び", "ビ", "bi"), ("ぶ", "ブ", "bu",), ("べ", "ベ", "be"), ("ぼ", "ボ", "bo"), ("ぱ", "パ", "pa"), ("ぴ", "ピ", "pi"), ("ぷ", "プ", "pu"), ("ぺ", "ペ", "pe"), ("ぽ", "ポ", "po")]
 
@@ -152,33 +153,42 @@ def folder_mkdir():
         if not os.path.exists(folder_path):
             try:
                 os.makedirs(folder_path)
+                
             except OSError as e:
                 print(f"mkdir '{folder_path}' failed: {e}")
+
     create_folder_if_not_exists(default_path)
     create_folder_if_not_exists(custom_path)
     create_folder_if_not_exists(mistakes_path)
+
 def download_default_exercises():
-    def get_file_names(owner, repo, path, github_token=None):
-        api_url = f"https://api.github.com/repos/Catalina-ys456/jakana/contents/config."
+    api_url = f"https://api.github.com/repos/Catalina-ys456/jakana/contents/config/.jakana/exercises/default"
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
 
-        headers = {}
-        if github_token:
-            headers["Authorization"] = f"token {github_token}"
-            
-       try:
-           response = requests.get(api_url, headers=headers)
-           response.raise_for_status()  # 如果状态码不是 200，抛出异常
+        contents = response.json()
+        file_names = [item['name'] for item in contents if item['type'] == 'file']
 
-           contents = response.json()
-           file_names = [item['name'] for item in contents if item['type'] == 'file']
-           return file_names
+        for file_name in file_names:
+            try:
+                download_url = f'https://raw.githubusercontent.com/Catalina-sys456/jakana/refs/heads/main/config/.jakana/exercises/default/{file_name}'
+                file_response = requests.get(download_url)
+                file_response.raise_for_status()
 
-       except requests.exceptions.RequestException as e:
-           print(f"Error fetching files: {e}")
-           return None
-       except ValueError as e:
-           print(f"Error decoding JSON: {e}")
-           return None
+                file_path = os.path.join(os.path.expanduser('~'), f'.jakana/exercises/default{file_name}')
+                with open(file_path, "wb") as f:  
+                    f.write(file_response.content)
+                    
+            except Exception as e:
+                print(f"Error downloading files: {e}")
+        
+    except ValueError as e:
+        print(f"Error decoding JSON: {e}")
+
+    except Exception as e:
+        print(f"Error fetching files: {e}")
+
 
 def main():
     if len(sys.argv) > 1:
@@ -206,6 +216,9 @@ def main():
                 break
             elif choice == '3':
                 record = True
+                download = input('Update default exercises? [Y/n] ')
+                if download == 'Y' or download == 'y':
+                    download_default_exercises()
                 train_from_folder(default_path, record)
                 break
             elif choice == '4':
