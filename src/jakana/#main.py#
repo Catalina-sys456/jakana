@@ -158,6 +158,8 @@ def folder_mkdir():
     create_folder_if_not_exists(custom_path)
     create_folder_if_not_exists(mistakes_path)
 
+def    
+
 def main():
     if len(sys.argv) > 1:
         for word in sys.argv:
