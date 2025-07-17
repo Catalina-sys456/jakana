@@ -157,6 +157,28 @@ def folder_mkdir():
     create_folder_if_not_exists(default_path)
     create_folder_if_not_exists(custom_path)
     create_folder_if_not_exists(mistakes_path)
+def download_default_exercises():
+    def get_file_names(owner, repo, path, github_token=None):
+        api_url = f"https://api.github.com/repos/Catalina-ys456/jakana/contents/config."
+
+        headers = {}
+        if github_token:
+            headers["Authorization"] = f"token {github_token}"
+            
+       try:
+           response = requests.get(api_url, headers=headers)
+           response.raise_for_status()  # 如果状态码不是 200，抛出异常
+
+           contents = response.json()
+           file_names = [item['name'] for item in contents if item['type'] == 'file']
+           return file_names
+
+       except requests.exceptions.RequestException as e:
+           print(f"Error fetching files: {e}")
+           return None
+       except ValueError as e:
+           print(f"Error decoding JSON: {e}")
+           return None
 
 def main():
     if len(sys.argv) > 1:
